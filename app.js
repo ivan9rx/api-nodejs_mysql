@@ -23,14 +23,27 @@ app.get("/users", async (req, res) => {
 
 });
 
-app.get("/usuario/:id", (req, res) => {
+app.get("/user/:id", async (req, res) => {
     const { id } = req.params;
-    return res.json({
-        erro: false,
-        id,
-        nome: "Cesar",
-        email: "cesar@celke.com.br"
+
+    // // await Usuario.findAll ({
+    //     where: {
+    //         id: id
+    //     }
+    // })
+
+    await Usuario.findByPk(id).then((user) => {
+        return res.json({
+            erro: false,
+            user: user
+        })
+    }).catch (() => {
+        return res.status(400).json({
+            erro: true,
+            mensagem: "Erro: Nenhum usuario encontrado"
+        });
     });
+    
 });
 
 app.post("/user", async (req, res) => {
@@ -60,7 +73,7 @@ app.put("/usuario", (req, res) => {
     });
 });
 
-app.delete("/usuario/:id", (req, res) => {
+app.delete("/user/:id", async (req, res) => {
     const { id } = req.params;
     return res.json({
         erro: false,
@@ -68,7 +81,7 @@ app.delete("/usuario/:id", (req, res) => {
     });
 });
 
-// comentando aqui
+// comentando aqui kkkk
 
 app.listen(8080, () => {
     console.log("Servidor iniciado na porta 8080: http://localhost:8080");
