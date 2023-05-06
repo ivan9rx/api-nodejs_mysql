@@ -68,6 +68,8 @@ app.delete("/usuario/:id", (req, res) => {
     });
 });
 
+// comentando aqui
+
 app.listen(8080, () => {
     console.log("Servidor iniciado na porta 8080: http://localhost:8080");
 });
