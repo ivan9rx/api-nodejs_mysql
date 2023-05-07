@@ -1,14 +1,15 @@
 const express = require("express");
-const Usuario = require('./models/Usuario');
+const User = require('./models/User');
 const app = express();
 
 app.use(express.json());
 
 app.get("/users", async (req, res) => {
 
-    await Usuario.findAll({
-        attributes: ['id', 'name', 'email'], 
-        order: [['id', 'DESC']]}).then((users) => {
+    await User.findAll({
+        attributes: ['id', 'name', 'email'],
+        order: [['id', 'DESC']]
+    }).then((users) => {
         return res.json({
             erro: false,
             users
@@ -26,30 +27,30 @@ app.get("/users", async (req, res) => {
 app.get("/user/:id", async (req, res) => {
     const { id } = req.params;
 
-    // // await Usuario.findAll ({
+    // // await User.findAll ({
     //     where: {
     //         id: id
     //     }
     // })
 
-    await Usuario.findByPk(id).then((user) => {
+    await User.findByPk(id).then((user) => {
         return res.json({
             erro: false,
             user: user
         })
-    }).catch (() => {
+    }).catch(() => {
         return res.status(400).json({
             erro: true,
             mensagem: "Erro: Nenhum usuario encontrado"
         });
     });
-    
+
 });
 
 app.post("/user", async (req, res) => {
     const { name, email } = req.body;
 
-    await Usuario.create(req.body).
+    await User.create(req.body).
         then(() => {
             return res.json({
                 erro: false,
@@ -63,14 +64,24 @@ app.post("/user", async (req, res) => {
         });
 });
 
-app.put("/usuario", (req, res) => {
-    const { id, nome, email } = req.body;
-    return res.json({
-        erro: false,
-        id,
-        nome,
-        email
-    });
+app.put("/user", async (req, res) => {
+    const { id, name, email } = req.body;
+
+    await User.update(req.body, { where: { id } })
+        .then(() => {
+            return res.json({
+                erro: false,
+                mensagem: "usuario editado com sucesso"
+            })
+        }).catch(() => {
+            return res.status(400).json({
+                erro: true,
+                mensagem: "Erro: Usuário não editado com sucesso!"
+            });
+        });
+
+
+
 });
 
 app.delete("/user/:id", async (req, res) => {
