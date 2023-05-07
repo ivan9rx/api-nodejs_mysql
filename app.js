@@ -86,10 +86,28 @@ app.put("/user", async (req, res) => {
 
 app.delete("/user/:id", async (req, res) => {
     const { id } = req.params;
-    return res.json({
-        erro: false,
-        id
-    });
+    const user = await User.findOne({
+        attributes: ['id', 'name', 'email'],
+        where: {
+            id: req.params.id
+        }
+    })
+
+    if (user === null) {
+        return res.status(400).json({
+            erro: true,
+            mensagem: "Erro: Usuário não encontrado!"
+        });
+    } else {
+        await User.destroy({ where: { id } })
+            .then(() => {
+                return res.status(200).json({
+                    erro: false,
+                    mensagem: "Usuário  apagado com sucesso!"
+                });
+            })
+    };
+
 });
 
 // comentando aqui kkkk
