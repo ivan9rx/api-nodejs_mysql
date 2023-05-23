@@ -27,11 +27,6 @@ app.get("/users", async (req, res) => {
 app.get("/user/:id", async (req, res) => {
     const { id } = req.params;
 
-    // // await User.findAll ({
-    //     where: {
-    //         id: id
-    //     }
-    // })
 
     await User.findByPk(id).then((user) => {
         return res.json({
@@ -66,6 +61,7 @@ app.post("/user", async (req, res) => {
 
 app.put("/user", async (req, res) => {
     const { id, name, email } = req.body;
+
 
     await User.update(req.body, { where: { id } })
         .then(() => {
